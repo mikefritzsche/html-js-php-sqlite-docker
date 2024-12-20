@@ -25,6 +25,24 @@ services:
       - "traefik.http.middlewares.plainjane-web-retry.retry.attempts=3"
       - "traefik.http.routers.plainjane-web.middlewares=plainjane-web-retry@docker"
 
+  adminer:
+    image: lscr.io/linuxserver/sqlitebrowser:latest
+    container_name: plainjane_db_admin
+    environment:
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - plainjane_sqlite_data:/data/database
+    restart: unless-stopped
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.plainjane-adminer.entrypoints=web"
+      - "traefik.http.routers.plainjane-adminer.rule=Host(`db.plainjane.local`)"
+      - "traefik.http.services.plainjane-adminer.loadbalancer.server.port=3000"
+
 networks:
   proxy:
     external: true
