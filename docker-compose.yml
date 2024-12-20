@@ -1,0 +1,38 @@
+# docker-compose.yml
+name: plainjane
+
+services:
+  web:
+    build: .
+    container_name: plainjane_web
+    volumes:
+      - ./src:/var/www/html:ro
+      - plainjane_sqlite_data:/var/www/html/database
+      - plainjane_admin:/var/www/html/admin
+    environment:
+      - APACHE_RUN_USER=www-data
+      - APACHE_RUN_GROUP=www-data
+    restart: unless-stopped
+    networks:
+      - proxy
+      - plainjane_internal
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.plainjane-web.entrypoints=web"
+      - "traefik.http.routers.plainjane-web.rule=Host(`plainjane.local`)"
+      - "traefik.http.services.plainjane-web.loadbalancer.server.port=80"
+      - "traefik.http.middlewares.plainjane-web-retry.retry.attempts=3"
+      - "traefik.http.routers.plainjane-web.middlewares=plainjane-web-retry@docker"
+
+networks:
+  proxy:
+    external: true
+  plainjane_internal:
+    name: plainjane_network
+
+volumes:
+  plainjane_sqlite_data:
+    name: plainjane_db
+  plainjane_admin:
+    name: plainjane_admin_data
