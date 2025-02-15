@@ -27,6 +27,6 @@ try {
 }
 
 // Other configuration settings
-define('SITE_NAME', 'Plain Jane');
-define('ADMIN_EMAIL', 'admin@example.com');
-?>
+define('SITE_NAME', 'Mike Fritzsche');
+define('ADMIN_EMAIL', 'mike@mikefritzsche.com');
+
