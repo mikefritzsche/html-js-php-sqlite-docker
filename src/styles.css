@@ -13,6 +13,9 @@ body {
 header {
     background-color: #333;
     padding: 1rem;
+    position: sticky;
+    top: 0;
+    width: 100%;
 }
 
 nav ul {
@@ -34,6 +37,7 @@ main {
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem;
+    height: 1900px;
 }
 
 section {
@@ -76,4 +80,26 @@ footer {
     position: fixed;
     bottom: 0;
     width: 100%;
+}
+
+#scrollIndicator {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 10px;
+    width: 0;
+    background: linear-gradient(90deg, purple, blue, orange, red, green);
+    z-index: 1000;
+    transition: width 0.2s ease;
+    animation: colorShift 5s infinite alternate;
+    background-size: 300% 100%; /* Extend the gradient for smoother transitions */
+}
+
+@keyframes colorShift {
+    0% {
+        background-position: 0% 50%; /* Start of the gradient */
+    }
+    100% {
+        background-position: 100% 50%; /* End of the gradient */
+    }
 }
