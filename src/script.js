@@ -1,3 +1,43 @@
+// Example usage in main thread:
+const dbWorker = new Worker('dbWorker.js');
+
+// Initialize the worker with API URL
+dbWorker.postMessage({
+  type: 'INIT',
+  payload: {
+    apiUrl: 'https://api.mikefritzsche.com/'
+  }
+});
+
+// Listen for messages from the worker
+dbWorker.onmessage = function(e) {
+  const { type, payload, requestId } = e.data;
+
+  switch (type) {
+    case 'INITIALIZED':
+      console.log('Worker initialized');
+      break;
+
+    case 'DATA_RECEIVED':
+      console.log('Received data:', payload);
+      break;
+
+    case 'ERROR':
+      console.error('Error:', payload);
+      break;
+  }
+};
+
+// Example query
+dbWorker.postMessage({
+  type: 'FETCH_DATA',
+  payload: {
+    query: 'SELECT * FROM users WHERE age > $1',
+    params: [18],
+    requestId: 'query-1'
+  }
+});
+
 document.addEventListener('DOMContentLoaded', function() {
   // Dynamic content loading
   const dynamicContent = document.getElementById('dynamic-content');
